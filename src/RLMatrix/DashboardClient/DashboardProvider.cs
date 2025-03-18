@@ -10,11 +10,11 @@ namespace RLMatrix.Dashboard
 		static SignalRDashboardClient _instance;
 		static ConsoleClient _consoleInstance;
 		static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
-		public static bool EnableConsoleLogging(int updateInterval)
+		public static bool EnableConsoleLogging()
 		{
 			if(_instance== null && _consoleInstance == null)
 			{
-				_consoleInstance ??= new ConsoleClient(updateInterval);
+				_consoleInstance ??= new ConsoleClient();
 				consoleLogging = true;
 				return true;
 			}

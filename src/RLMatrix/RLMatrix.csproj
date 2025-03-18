@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net8.0;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
 		<LangVersion>latest</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
-
+	
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
 		<DefineConstants>NET8_0</DefineConstants>
 	</PropertyGroup>
@@ -17,8 +17,8 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<PackageId>RLMatrix</PackageId>
-		<Version>0.4.3.8</Version>
+		<PackageId>LRMat</PackageId>
+		<Version>0.4.3.11</Version>
 		<Authors>Adrian Sieradzki</Authors>
 		<Company>Adrian Sieradzki</Company>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
@@ -47,24 +47,17 @@
 	
 	
 	
-	<!--release configuration-->
-
-	<ItemGroup>
+	<!--<ItemGroup>
 		<PackageReference Include="IEnumerableUnpacker" Version="1.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.6" />
 		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="8.0.6" />
 		<PackageReference Include="RLMatrix.Common" Version="0.4.3" />
 		<PackageReference Include="System.Reactive" Version="6.0.1" />
-		<PackageReference Include="TorchSharp-cuda-windows" Version="0.102.2" />
+		<PackageReference Include="TorchSharp-cuda-linux" Version="0.102.2" />
 		<PackageReference Include="TorchVision" Version="0.102.2" />
-		<PackageReference Include="IEnumerableUnpacker" Version="1.0.3" />
-	</ItemGroup>
+	</ItemGroup>-->
 	
-	
-	
-	<!--dev configuration-->
-
-	<!--<ItemGroup>
+	<ItemGroup>
 		<PackageReference Include="IEnumerableUnpacker" Version="1.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.6" />
 		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="8.0.6" />
@@ -76,7 +69,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\RLMatrix.Common\RLMatrix.Common.csproj" />
-	</ItemGroup>-->
+	</ItemGroup>
 
 
 

@@ -1,5 +1,4 @@
-﻿using TorchSharp;
-using static TorchSharp.torch;
+﻿using static TorchSharp.torch;
 
 namespace RLMatrix.Agents.Common
 {

@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR.Client;
 using RLMatrix.Common;
 using RLMatrix.Common.Dashboard;
-using System.Threading;
 
 namespace RLMatrix.Dashboard
 {
@@ -43,14 +38,18 @@ namespace RLMatrix.Dashboard
 		private readonly Guid _experimentId;
 		private IDisposable _dataSubscription;
 
-		private ConcurrentQueue<ExperimentData> _dataQueue = new ConcurrentQueue<ExperimentData>();
-		private Timer _sendTimer;
-		private int processedEpisodes;
+		ConcurrentQueue<ExperimentData> _dataQueue = new ConcurrentQueue<ExperimentData>();
+		Timer _sendTimer;
+		int processedEpisodes;
 		double cumulativeRewards = 0;
-		int consoleUpdateIntervalSeconds = 1;
-		public ConsoleClient(int refreshInterval = 1)
+
+		public static int RefreshEverySeconds = 1;
+		public static int CheckpointEveryNEpisodes = 0;
+		int lastCheckpoint = 0;
+		public static event Action<double> OnCheckpointReached;
+
+		public ConsoleClient()
 		{
-			consoleUpdateIntervalSeconds = refreshInterval;
 			_experimentId = Guid.NewGuid();
 			var latestOptimizationData = Observable.CombineLatest(
 					ActorLoss, ActorLearningRate, CriticLoss, CriticLearningRate,
@@ -91,13 +90,13 @@ namespace RLMatrix.Dashboard
 					})
 					.Subscribe(data => _dataQueue.Enqueue(data));
 
-			_sendTimer = new Timer(SendQueuedData, null, TimeSpan.Zero, TimeSpan.FromSeconds(consoleUpdateIntervalSeconds));
+			_sendTimer = new Timer(SendQueuedData, null, TimeSpan.Zero, TimeSpan.FromSeconds(RefreshEverySeconds));
 			Console.WriteLine("console mode");
 		}
 
 		void SendQueuedData(object? state)
 		{
-			for(int i=0; !_dataQueue.IsEmpty; i++)
+			for (int i = 0; !_dataQueue.IsEmpty; i++)
 			{
 				if (_dataQueue.TryDequeue(out var data))
 				{
@@ -105,6 +104,11 @@ namespace RLMatrix.Dashboard
 						cumulativeRewards += data.Reward.Value;
 					processedEpisodes++;
 
+					if (processedEpisodes > lastCheckpoint + CheckpointEveryNEpisodes)
+					{
+						lastCheckpoint = processedEpisodes;
+						OnCheckpointReached?.Invoke(cumulativeRewards);
+					}
 					if (i == 0)
 					{
 						Console.WriteLine("ep=" + processedEpisodes + " cRwrds=" + cumulativeRewards.ToString("N3") + data.ToString());
